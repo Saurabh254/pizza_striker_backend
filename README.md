@@ -1,2 +1,1 @@
-# messaging-app-replica-backend
-Messaging App Replica - backend Build in FastAPI 
+# Pizza striker backend 
