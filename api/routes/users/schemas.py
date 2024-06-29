@@ -31,4 +31,7 @@ class LoginResponse(BaseModel):
 class StrikesResponse(BaseModel):
     id: str = Field(min_length=12, max_length=12)
     reason: str
+    created_at: datetime
+    updated_at: datetime
+
     user: SlimUser

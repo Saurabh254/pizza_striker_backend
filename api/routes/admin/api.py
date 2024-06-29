@@ -8,6 +8,7 @@ from api.database.db import get_db
 from api.routes.users import interface as users_interface
 from api.routes.users import schemas as users_schemas
 from api.utils.auth import auth
+from fastapi import status
 
 from . import errors, interface, models, schemas
 
@@ -20,8 +21,10 @@ async def login(data: schemas.LoginUser, db: Session = Depends(get_db)):
         return interface.admin_login(
             phone=data.phone, hashed_password=data.hashed_password, db=db
         )
-
+    except errors.AdminNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -72,6 +75,7 @@ async def delete_user_strike(
         return interface.delete_user_strike(strike_id, db=db)
 
     except Exception as e:
+        print(str(e))
         raise HTTPException(status_code=500, detail=str(e))
 
 

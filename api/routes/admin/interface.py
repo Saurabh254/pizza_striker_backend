@@ -1,14 +1,11 @@
 from fastapi import HTTPException
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy.orm import Session
+from api.utils.auth import auth_bearer
+from . import errors, models, schemas
 
-from api.routes.users import interface
 from api.routes.users import interface as user_interface
 from api.routes.users import models as user_models
-from api.routes.users import models as users_models
-from api.utils.auth import auth_bearer
-
-from . import errors, models, schemas
 
 
 def get_admin(phone: str, hashed_password: str, db: Session):
@@ -28,7 +25,7 @@ def admin_login(phone: str, hashed_password: str, db: Session):
     admin = get_admin(phone=phone, hashed_password=hashed_password, db=db)
 
     if not admin:
-        raise ValueError("Admin does not exists")
+        raise errors.AdminNotFoundError(phone=phone)
     data = {
         "id": admin.id,
         "phone": admin.phone,
@@ -59,7 +56,7 @@ def create_user_strike(data: schemas.CreateStrike, db: Session):
     user = get_user_by_id(user_id=data.user_id, db=db)
     if not user:
         raise HTTPException(status_code=404, detail="user does not exists")
-    strike = users_models.UserStrikes(user_id=data.user_id, reason=data.reason)  # type:
+    strike = user_models.UserStrikes(user_id=data.user_id, reason=data.reason)
     user.strike_count = user.strike_count + 1
     db.add(strike)
     db.commit()
@@ -69,10 +66,16 @@ def create_user_strike(data: schemas.CreateStrike, db: Session):
 
 
 def delete_user_strike(strike_id: str, db: Session):
-    strike = (
+    strike: user_models.UserStrikes | None = (
         db.query(user_models.UserStrikes)
         .filter(user_models.UserStrikes.id == strike_id)
         .scalar()
     )
+    if strike:
+        user = db.get(user_models.Users, strike.user_id)
+        user.strike_count = user.strike_count - 1 if user.strike_count > 0 else 0
+        db.commit()
+        db.refresh(user)
+
     db.delete(strike)
     db.commit()
