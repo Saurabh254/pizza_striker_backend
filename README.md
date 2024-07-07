@@ -28,3 +28,8 @@ Technologies used in the project:
 - [PostgreSQL](https://www.postgresql.org/)
 - [SQLAlchemy](https://www.sqlalchemy.org/)
 - [FastAPI](https://fastapi.tiangolo.com/)
+
+<h2>Project Repository</h2>
+
+- [Backend Repository](https://github.com/Saurabh254/pizza_striker-backend)
+- [Frontend Repository](https://github.com/Saurabh254/pizza_striker_admin)
