@@ -6,7 +6,7 @@
 
 <h2>Swagger UI </h2>
 
-<img src="./assets/swagger_ui.png" alt="project-screenshot" width="700" >
+<img align="center" src="./assets/swagger_ui.png" alt="project-screenshot" width="700" >
 
 
  <h2>Features</h2>
