@@ -27,7 +27,7 @@ class JWTBearer(HTTPBearer):
             payload_data = self.verify_jwt(credentials.credentials)
             if not payload_data:
                 raise HTTPException(
-                    status_code=403, detail="Invalid token or expired token."
+                    status_code=401, detail="Invalid token or expired token."
                 )
             return payload_data
         else:

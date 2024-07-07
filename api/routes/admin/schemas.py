@@ -25,3 +25,9 @@ class LoginResponse(BaseModel):
 class CreateStrike(BaseModel):
     user_id: str
     reason: str
+
+
+class StrikesResponse(CreateStrike):
+    reason: str
+    created_at: datetime
+    updated_at: datetime
